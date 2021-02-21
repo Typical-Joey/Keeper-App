@@ -21,6 +21,7 @@ function CreateArea(props) {
   // Pass note object to App.jsx
   function submitNote(event) {
     props.onAdd(note);
+    setNote({ title: "", content: "" });
 
     event.preventDefault();
   }
@@ -28,12 +29,18 @@ function CreateArea(props) {
   return (
     <div>
       <form>
-        <input onChange={makeNote} name="title" placeholder="Title" />
+        <input
+          onChange={makeNote}
+          name="title"
+          placeholder="Title"
+          value={note.title}
+        />
         <textarea
           onChange={makeNote}
           name="content"
           placeholder="Take a note..."
           rows="3"
+          value={note.content}
         />
         <button onClick={submitNote}>Add</button>
       </form>

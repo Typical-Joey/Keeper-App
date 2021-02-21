@@ -15,6 +15,15 @@ function App() {
     });
   }
 
+  // Delete note from notes array
+  function deleteNote(id) {
+    updateNotes(() => {
+      return notes.filter((note, index) => {
+        return index !== id;
+      });
+    });
+  }
+
   return (
     <div>
       <Header />
@@ -28,6 +37,7 @@ function App() {
           <Note
             key={index}
             id={index}
+            onDelete={deleteNote}
             title={note.title}
             content={note.content}
           />
