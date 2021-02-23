@@ -1,12 +1,24 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Header from "./Header";
 import Footer from "./Footer";
 import Note from "./Note";
 import CreateArea from "./CreateArea";
+import axios from "axios";
 
 function App() {
   // All notes
   const [notes, updateNotes] = useState([]);
+
+  // Recieving notes from server
+  function renderNotes() {
+    axios
+      .get("/user/notes")
+      .catch((err) => console.log(err))
+      .then((res) => {
+        const data = res.data;
+        return addNote(data);
+      });
+  }
 
   // Add note to notes array
   function addNote(note) {
@@ -23,6 +35,11 @@ function App() {
       });
     });
   }
+
+  // Test, calls on first page render, and adds 1 note from server
+  useEffect(() => {
+    renderNotes();
+  }, []);
 
   return (
     <div>
