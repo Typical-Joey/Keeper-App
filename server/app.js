@@ -8,6 +8,8 @@ app.use(
     extended: true,
   })
 );
+// Need to use express.json() to handle json objects being sent from react server
+app.use(express.json());
 
 mongoose.connect("mongodb://localhost:27017/keeperDB", {
   useUnifiedTopology: true,
@@ -16,7 +18,7 @@ mongoose.connect("mongodb://localhost:27017/keeperDB", {
 });
 
 const userSchema = mongoose.Schema({
-  notes: Array
+  notes: Array,
 });
 
 const User = mongoose.model("User", userSchema);
@@ -29,13 +31,13 @@ app.get("/", function (req, res) {
 app.get("/user/notes", function (req, res) {
   res.send({
     title: "Test Note",
-    content: "Server is sending data to front-end!"
+    content: "Server is sending data to front-end!",
   });
 });
 
 // Add users notes to database
-app.post("/user/add-note", function(req, res) {
-  console.log(req);
+app.post("/user/add-note", function (req, res) {
+  console.log(req.body);
 });
 
 // Port needs to be 5000 beacuse react defaults to 3000

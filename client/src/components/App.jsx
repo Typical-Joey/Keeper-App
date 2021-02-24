@@ -20,6 +20,14 @@ function App() {
       });
   }
 
+  // Sending notes to server
+  function sendNote(note) {
+    axios
+      .post("/user/add-note", { title: "Test", content: "Please god" })
+      .then((res) => console.log("Sent Note"))
+      .catch((err) => console.log(err));
+  }
+
   // Add note to notes array
   function addNote(note) {
     updateNotes((prevValues) => {
@@ -36,9 +44,15 @@ function App() {
     });
   }
 
+  useEffect(() => {
+    sendNote();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   // Test, calls on first page render, and adds 1 note from server
   useEffect(() => {
     renderNotes();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
