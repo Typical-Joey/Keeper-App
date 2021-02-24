@@ -18,27 +18,46 @@ mongoose.connect("mongodb://localhost:27017/keeperDB", {
 });
 
 const userSchema = mongoose.Schema({
+  // username: String,
+  // password: String,
+  // email: String,
   notes: Array,
 });
 
 const User = mongoose.model("User", userSchema);
 
+const test = new User({
+  notes: [
+    { title: "Test 1", content: "Something" },
+    { title: "Test 2", content: "Something Else" },
+  ],
+});
+
+// test.save();
+
 app.get("/", function (req, res) {
   res.send("Working");
 });
 
-// Show users notes
-app.get("/user/notes", function (req, res) {
-  res.send({
-    title: "Test Note",
-    content: "Server is sending data to front-end!",
-  });
-});
+app
+  .route("/user/notes")
 
-// Add users notes to database
-app.post("/user/add-note", function (req, res) {
-  console.log(req.body);
-});
+  // Show users notes
+  .get(function (req, res) {
+    User.find(function (err, user) {
+      if (err) {
+        console.log(err);
+      } else {
+        // Sending user specific notes array to front-end
+        res.send(user[0].notes);
+      }
+    });
+  })
+
+  // Add users notes to database
+  .post(function (req, res) {
+    // console.log(req.body);
+  });
 
 // Port needs to be 5000 beacuse react defaults to 3000
 app.listen(process.env.PORT || 5000, function () {
