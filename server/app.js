@@ -18,27 +18,51 @@ mongoose.connect("mongodb://localhost:27017/keeperDB", {
 });
 
 const userSchema = mongoose.Schema({
-  // username: String,
-  // password: String,
-  // email: String,
+  username: String,
+  password: String,
+  email: String,
   notes: Array,
 });
 
 const User = mongoose.model("User", userSchema);
 
 const test = new User({
+  username: "Bob",
+  password: "123",
+  email: "bob@bob.com",
   notes: [
-    { title: "Test 1", content: "Something" },
-    { title: "Test 2", content: "Something Else" },
+    {
+      title: "Test 1",
+      content: "Something",
+    },
+    {
+      content: "Something Else",
+    },
   ],
 });
 
 // test.save();
 
-app.get("/", function (req, res) {
-  res.send("Working");
+// Register Route
+app.post("/user/register", function (req, res) {
+  const username = req.body.username;
+  const email = req.body.email;
+  const password = req.body.password; // Needs to be encrypted using passport
+  const user = new User({
+    username: username,
+    email: email,
+    password: password,
+    notes: [],
+  });
+  user.save();
 });
 
+// Login Route
+app.post("/user/login", function (req, res) {
+  console.log(req.body);
+});
+
+// Notes Route
 app
   .route("/user/notes")
 
