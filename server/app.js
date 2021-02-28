@@ -48,6 +48,7 @@ app.post("/user/register", function (req, res) {
   const username = req.body.username;
   const email = req.body.email;
   const password = req.body.password; // Needs to be encrypted using passport
+
   const user = new User({
     username: username,
     email: email,
@@ -59,7 +60,18 @@ app.post("/user/register", function (req, res) {
 
 // Login Route
 app.post("/user/login", function (req, res) {
-  console.log(req.body);
+  const { email, password } = req.body;
+  User.findOne({ email: email }, function (err, user) {
+    if (err) {
+      console.log(err);
+    } else if (!user) {
+      // Send back to login page with warning
+      console.log("User not found");
+    } else {
+      // Send to app page
+      console.log("Successfully logged in!");
+    }
+  });
 });
 
 // Notes Route

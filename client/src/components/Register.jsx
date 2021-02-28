@@ -2,12 +2,13 @@ import React, { useState } from "react";
 import Footer from "./Footer";
 import axios from "axios";
 
-function Login() {
+function Register() {
   const [user, setUser] = useState({
     username: "",
     email: "",
     password: "",
   });
+
 
   function createUser(event) {
     const { name, value } = event.target;
@@ -19,43 +20,56 @@ function Login() {
     });
   }
 
-  function login() {
+
+  function register() {
     axios
-      .post("/user/login", user)
+      .post("/user/register", user)
       .then((res) => console.log("Sent User"))
       .catch((err) => console.log(err));
   }
+
   return (
     <div>
       {/* Right side of the screen */}
       <div className="login right-login">
-        <h1>Login</h1>
-        <form onSubmit={login}>
+        <h1>Register</h1>
+        <form onSubmit={register}>
           <div className="form-group">
-            <label for="exampleInputEmail1">Email address</label>
+            <label htmlFor="usernameInput">Username:</label>
+            <input
+              onChange={createUser}
+              type="text"
+              className="form-control"
+              id="usernameInput"
+              placeholder="Username"
+              name="username"
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="emailInput">Email:</label>
             <input
               onChange={createUser}
               type="email"
               className="form-control"
-              id="exampleInputEmail1"
+              id="emailInput"
               placeholder="Email"
               name="email"
             />
           </div>
           <div className="form-group">
-            <label for="exampleInputPassword1">Password</label>
+            <label htmlFor="passwordInput">Password:</label>
             <input
               onChange={createUser}
               type="password"
               className="form-control"
-              id="exampleInputPassword1"
+              id="passwordInput"
               placeholder="Password"
               name="password"
             />
           </div>
 
           <button type="submit" className="btn btn-lg btn-outline-primary">
-            Login
+            Register
           </button>
         </form>
       </div>
@@ -75,4 +89,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default Register;

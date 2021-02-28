@@ -9,21 +9,22 @@ function App() {
   // All notes
   const [notes, updateNotes] = useState([]);
 
-  // Recieving notes from server
+  // Adds all initial notes in database
   function renderNotes() {
     axios
       .get("/user/notes")
-      .catch((err) => console.log(err))
       .then((res) => {
         const data = res.data;
-        return addNote(data);
-      });
+        console.log(data);
+        return data.forEach((note) => addNote(note));
+      })
+      .catch((err) => console.log(err));
   }
 
   // Sending notes to server
   function sendNote(note) {
     axios
-      .post("/user/add-note", { title: "Test", content: "Please god" })
+      .post("/user/notes", note)
       .then((res) => console.log("Sent Note"))
       .catch((err) => console.log(err));
   }
@@ -44,10 +45,10 @@ function App() {
     });
   }
 
-  useEffect(() => {
-    sendNote();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // useEffect(() => {
+  //   sendNote();
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
 
   // Test, calls on first page render, and adds 1 note from server
   useEffect(() => {
