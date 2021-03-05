@@ -26,22 +26,6 @@ const userSchema = mongoose.Schema({
 
 const User = mongoose.model("User", userSchema);
 
-const test = new User({
-  username: "Bob",
-  password: "123",
-  email: "bob@bob.com",
-  notes: [
-    {
-      title: "Test 1",
-      content: "Something",
-    },
-    {
-      content: "Something Else",
-    },
-  ],
-});
-
-// test.save();
 
 // Register Route
 app.post("/user/register", function (req, res) {
