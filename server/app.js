@@ -26,20 +26,28 @@ const userSchema = mongoose.Schema({
 
 const User = mongoose.model("User", userSchema);
 
-
 // Register Route
 app.post("/user/register", function (req, res) {
-  const username = req.body.username;
-  const email = req.body.email;
-  const password = req.body.password; // Needs to be encrypted using passport
+  const { username, email, password } = req.body;
 
-  const user = new User({
-    username: username,
-    email: email,
-    password: password,
-    notes: [],
+  User.findOne({ email: email }, function (err, user) {
+    if (err) {
+      res.json({ status: 400 }); // Error occured
+    } else {
+      if (user) {
+        res.json({ status: 409 }); // User already exists
+      } else {
+        const user = new User({
+          username: username,
+          email: email,
+          password: password,
+          notes: [],
+        });
+        user.save();
+        res.json({ status: 200 }); // User successfully created
+      }
+    }
   });
-  user.save();
 });
 
 // Login Route
@@ -51,9 +59,10 @@ app.post("/user/login", function (req, res) {
     } else if (!user) {
       // Send back to login page with warning
       console.log("User not found");
+      res.json({ status: 404 });
     } else {
       // Send to app page
-      console.log("Successfully logged in!");
+      res.json({ status: 200 }); // User successfully logged in
     }
   });
 });
