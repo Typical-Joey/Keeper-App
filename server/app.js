@@ -26,6 +26,14 @@ const userSchema = mongoose.Schema({
 
 const User = mongoose.model("User", userSchema);
 
+const activeUser = {};
+
+// User Route
+// This will be used so the front-end can get the users info to update notes
+app.get("/user", function (req, res){
+  res.json(activeUser);
+});
+
 // Register Route
 app.post("/user/register", function (req, res) {
   const { username, email, password } = req.body;
@@ -44,6 +52,7 @@ app.post("/user/register", function (req, res) {
           notes: [],
         });
         user.save();
+        activeUser = user;
         res.json({ status: 200 }); // User successfully created
       }
     }
@@ -56,6 +65,7 @@ app.post("/user/login", function (req, res) {
   User.findOne({ email: email }, function (err, user) {
     if (err) {
       console.log(err);
+      res.json({ status: 400 });
     } else if (!user) {
       // Send back to login page with warning
       console.log("User not found");
