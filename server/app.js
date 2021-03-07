@@ -17,6 +17,11 @@ mongoose.connect("mongodb://localhost:27017/keeperDB", {
   useFindAndModify: false,
 });
 
+const noteSchema = mongoose.Schema({
+  title: String,
+  content: String,
+});
+
 const userSchema = mongoose.Schema({
   username: String,
   password: String,
@@ -100,7 +105,19 @@ app
 
   // Add users notes to database
   .post(function (req, res) {
-    User.insert();
+    const data = req.body;
+    User.findByIdAndUpdate(
+      data.id,
+      { $push: { notes: data.note } },
+      function (err) {
+        if (err) {
+          console.log(err);
+          res.json({ status: 500 });
+        } else {
+          res.json({ status: 200 });
+        }
+      }
+    );
   });
 
 // Port needs to be 5000 beacuse react defaults to 3000
