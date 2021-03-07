@@ -87,38 +87,22 @@ app.post("/user/login", function (req, res) {
   });
 });
 
-// Notes Route
-app
-  .route("/user/notes")
-
-  // Show users notes
-  .get(function (req, res) {
-    User.find(function (err, user) {
+// Add users notes to database
+app.post("/user/notes", function (req, res) {
+  const data = req.body;
+  User.findByIdAndUpdate(
+    data.id,
+    { $push: { notes: data.note } },
+    function (err) {
       if (err) {
         console.log(err);
+        res.json({ status: 500 });
       } else {
-        // Sending user specific notes array to front-end
-        res.send(user[0].notes);
+        res.json({ status: 200 });
       }
-    });
-  })
-
-  // Add users notes to database
-  .post(function (req, res) {
-    const data = req.body;
-    User.findByIdAndUpdate(
-      data.id,
-      { $push: { notes: data.note } },
-      function (err) {
-        if (err) {
-          console.log(err);
-          res.json({ status: 500 });
-        } else {
-          res.json({ status: 200 });
-        }
-      }
-    );
-  });
+    }
+  );
+});
 
 // Port needs to be 5000 beacuse react defaults to 3000
 app.listen(process.env.PORT || 5000, function () {
