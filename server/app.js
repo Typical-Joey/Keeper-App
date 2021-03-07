@@ -104,6 +104,23 @@ app.post("/user/notes", function (req, res) {
   );
 });
 
+// Deleting users notes in database
+app.post("/user/notes/delete", function (req, res) {
+  const data = req.body;
+  User.findByIdAndUpdate(
+    data.id,
+    { $pull: { notes: data.note } },
+    function (err) {
+      if (err) {
+        console.log(err);
+        res.json({status: 500});
+      } else {
+        res.json({status: 200})
+      }
+    }
+  );
+});
+
 // Port needs to be 5000 beacuse react defaults to 3000
 app.listen(process.env.PORT || 5000, function () {
   console.log("Server is now listening");

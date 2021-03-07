@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import Footer from "./Footer";
-import axios from "axios";
+import ReactDOM from "react-dom";
+import App from "./App";
+import Register from "./Register";
+import LoginErrors from "./LoginErrors";
 
 function Login() {
   const [user, setUser] = useState({
@@ -9,7 +12,9 @@ function Login() {
     password: "",
   });
 
-  function createUser(event) {
+  const [errorCode, setErrorCode] = useState(null);
+
+  function userInfo(event) {
     const { name, value } = event.target;
     setUser((prevValues) => {
       return {
@@ -19,36 +24,56 @@ function Login() {
     });
   }
 
-  function login() {
-    axios
-      .post("/user/login", user)
-      .then((res) => console.log("Sent User"))
-      .catch((err) => console.log(err));
+  function registerRedirect() {
+    ReactDOM.render(<Register />, document.getElementById("root"));
   }
+
+  async function login(e) {
+    e.preventDefault();
+    const url = "/user/login";
+    const options = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(user),
+    };
+
+    const response = await fetch(url, options);
+    const data = await response.json();
+    if (data.status === 200) {
+      ReactDOM.render(<App />, document.getElementById("root"));
+    } else {
+      setErrorCode(data.status);
+      ReactDOM.render(<Login />, document.getElementById("root"));
+    }
+  }
+
   return (
     <div>
       {/* Right side of the screen */}
       <div className="login right-login">
         <h1>Login</h1>
+        <LoginErrors statusCode={errorCode} />
         <form onSubmit={login}>
           <div className="form-group">
-            <label for="exampleInputEmail1">Email address</label>
+            <label htmlFor="emailInput">Email:</label>
             <input
-              onChange={createUser}
+              onChange={userInfo}
               type="email"
               className="form-control"
-              id="exampleInputEmail1"
+              id="emailInput"
               placeholder="Email"
               name="email"
             />
           </div>
           <div className="form-group">
-            <label for="exampleInputPassword1">Password</label>
+            <label htmlFor="passwordInput">Password:</label>
             <input
-              onChange={createUser}
+              onChange={userInfo}
               type="password"
               className="form-control"
-              id="exampleInputPassword1"
+              id="passwordInput"
               placeholder="Password"
               name="password"
             />
@@ -56,6 +81,13 @@ function Login() {
 
           <button type="submit" className="btn btn-lg btn-outline-primary">
             Login
+          </button>
+
+          <button
+            onClick={registerRedirect}
+            className="btn btn-lg btn-outline-primary right-button"
+          >
+            Register
           </button>
         </form>
       </div>
