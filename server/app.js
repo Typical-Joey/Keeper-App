@@ -26,11 +26,11 @@ const userSchema = mongoose.Schema({
 
 const User = mongoose.model("User", userSchema);
 
-const activeUser = {};
+let activeUser = {};
 
 // User Route
 // This will be used so the front-end can get the users info to update notes
-app.get("/user", function (req, res){
+app.get("/user", function (req, res) {
   res.json(activeUser);
 });
 
@@ -72,7 +72,12 @@ app.post("/user/login", function (req, res) {
       res.json({ status: 404 });
     } else {
       // Send to app page
-      res.json({ status: 200 }); // User successfully logged in
+      if (user.password === password) {
+        activeUser = user;
+        res.json({ status: 200 }); // User successfully logged in
+      } else {
+        res.json({ status: 403 }); // Incorrect Password
+      }
     }
   });
 });
@@ -95,7 +100,7 @@ app
 
   // Add users notes to database
   .post(function (req, res) {
-    // console.log(req.body);
+    User.insert();
   });
 
 // Port needs to be 5000 beacuse react defaults to 3000
