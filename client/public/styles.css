@@ -65,7 +65,11 @@ footer p {
   font-family: "McLaren", cursive;
   float: left;
   text-align: center;
+}
 
+.btn-label {
+  position: absolute;
+  top: 10px;
 }
 
 .note {

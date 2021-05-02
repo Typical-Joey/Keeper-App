@@ -94,6 +94,7 @@ function Register() {
           </button>
 
           <button
+            id="loginRedirect"
             onClick={loginRedirect}
             className="btn btn-lg btn-outline-primary right-button"
           >
