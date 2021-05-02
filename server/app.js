@@ -113,13 +113,39 @@ app.post("/user/notes/delete", function (req, res) {
     function (err) {
       if (err) {
         console.log(err);
-        res.json({status: 500});
+        res.json({ status: 500 });
       } else {
-        res.json({status: 200})
+        res.json({ status: 200 });
       }
     }
   );
 });
+
+// ** MIDDLEWARE ** //
+const whitelist = ['http://localhost:3000'​, 'http://localhost:5000'​, 'https://keepersite.herokuapp.com/​'];
+const corsOptions = {
+  origin: function (origin, callback) {
+    console.log("** Origin of request " + origin)
+    if (whitelist.indexOf(origin) !== -1 || !origin) {
+      console.log("Origin acceptable")
+      callback(null, true)
+    } else {
+      console.log("Origin rejected")
+      callback(new Error('Not allowed by CORS'))
+    }
+  }
+}
+app.use(cors(corsOptions))
+
+
+
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, "../client/build")));
+
+  app.get("*", function (req, res) {
+    res.sendFile(path.join(__dirname, "../client/build", "index.html"));
+  });
+}
 
 // Port needs to be 5000 beacuse react defaults to 3000
 app.listen(process.env.PORT || 5000, function () {
