@@ -1,6 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
+const path = require('path')
 
 const app = express();
 app.use(
@@ -10,6 +11,13 @@ app.use(
 );
 // Need to use express.json() to handle json objects being sent from react server
 app.use(express.json());
+
+// Serve static files from the React frontend app
+app.use(express.static(path.join(__dirname, 'client/build')))
+// Anything that doesn't match the above, send back index.html
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname + '/../client/build/index.html'))
+})
 
 mongoose.connect("mongodb://localhost:27017/keeperDB", {
   useUnifiedTopology: true,
