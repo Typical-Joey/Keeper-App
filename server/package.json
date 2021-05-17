@@ -14,6 +14,9 @@
   },
   "author": "Joseph Capocci",
   "license": "ISC",
+  "engines": {
+    "node": "14.16.1"
+  },
   "dependencies": {
     "body-parser": "^1.19.0",
     "concurrently": "^6.0.0",
