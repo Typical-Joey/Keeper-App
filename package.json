@@ -7,10 +7,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node app.js",
     "server": "nodemon app.js",
-    "client": "cd ../client && npm start",
+    "client": "cd client && npm start",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "heroku-postbuild": "cd ../client && npm install && npm install --only=dev --no-shrinkwrap && npm run build",
-    "postinstall": "npm run build"
+    "postinstall": "cd client && npm run build"
   },
   "author": "Joseph Capocci",
   "license": "ISC",
