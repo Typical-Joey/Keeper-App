@@ -1,9 +1,22 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
-const path = require('path')
-
+const cors = require("cors");
+const path = require("path");
 const app = express();
+
+// Hopefully this allows me to push to heroku
+app.use(cors());
+
+app.use(express.static(path.join(__dirname, "../client/build")));
+
+// The "catchall" handler: for any request that doesn't
+// match one above, send back React's index.html file.
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "../client/build/index.html"));
+});
+// ------------------------------------------------
+
 app.use(
   bodyParser.urlencoded({
     extended: true,
@@ -12,18 +25,14 @@ app.use(
 // Need to use express.json() to handle json objects being sent from react server
 app.use(express.json());
 
-// Serve static files from the React frontend app
-app.use(express.static(path.join(__dirname, 'client/build')))
-// Anything that doesn't match the above, send back index.html
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname + '/../client/build/index.html'))
-})
-
-mongoose.connect("mongodb://localhost:27017/keeperDB", {
-  useUnifiedTopology: true,
-  useNewUrlParser: true,
-  useFindAndModify: false,
-});
+mongoose.connect(
+  `mongodb+srv://admin-joey:${process.env.DBPASSWORD}@keeper.zv18s.mongodb.net/keeperDB`,
+  {
+    useUnifiedTopology: true,
+    useNewUrlParser: true,
+    useFindAndModify: false,
+  }
+);
 
 const noteSchema = mongoose.Schema({
   title: String,
@@ -128,32 +137,6 @@ app.post("/user/notes/delete", function (req, res) {
     }
   );
 });
-
-// ** MIDDLEWARE ** //
-const whitelist = ['http://localhost:3000'​, 'http://localhost:5000'​, 'https://keepersite.herokuapp.com/​'];
-const corsOptions = {
-  origin: function (origin, callback) {
-    console.log("** Origin of request " + origin)
-    if (whitelist.indexOf(origin) !== -1 || !origin) {
-      console.log("Origin acceptable")
-      callback(null, true)
-    } else {
-      console.log("Origin rejected")
-      callback(new Error('Not allowed by CORS'))
-    }
-  }
-}
-app.use(cors(corsOptions))
-
-
-
-if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname, "../client/build")));
-
-  app.get("*", function (req, res) {
-    res.sendFile(path.join(__dirname, "../client/build", "index.html"));
-  });
-}
 
 // Port needs to be 5000 beacuse react defaults to 3000
 app.listen(process.env.PORT || 5000, function () {

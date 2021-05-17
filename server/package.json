@@ -9,13 +9,15 @@
     "server": "nodemon app.js",
     "client": "cd ../client && npm start",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "heroku-postbuild": "cd ../client && npm install && npm install --only=dev --no-shrinkwrap && npm run build"
+    "heroku-postbuild": "cd ../client && npm install && npm install --only=dev --no-shrinkwrap && npm run build",
+    "postinstall": "npm run build"
   },
   "author": "Joseph Capocci",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.19.0",
     "concurrently": "^6.0.0",
+    "cors": "^2.8.5",
     "express": "^4.17.1",
     "mongoose": "^5.11.17"
   }
