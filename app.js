@@ -8,7 +8,7 @@ const app = express();
 // Hopefully this allows me to push to heroku
 app.use(cors());
 
-app.use(express.static(__dirname + "/client"));
+app.use(express.static(__dirname + "client"));
 
 if (process.env.NODE_ENV === "production") {
   app.use(express.static("client/build"));
@@ -16,8 +16,6 @@ if (process.env.NODE_ENV === "production") {
     res.sendFile(path.join("client/build", "index.html"));
   });
 }
-
-app.listen(process.env.PORT || 3000);
 
 app.use(
   bodyParser.urlencoded({
