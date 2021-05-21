@@ -8,14 +8,12 @@ const app = express();
 // Hopefully this allows me to push to heroku
 app.use(cors());
 
-app.use(express.static(__dirname + "client"));
-
-if (process.env.NODE_ENV === "production") {
-  app.use(express.static("client/build"));
-  app.get("*", (req, res) => {
-    res.sendFile(path.join("client/build", "index.html"));
-  });
-}
+// Serve static files from the React frontend app
+app.use(express.static(path.join(__dirname, "client/build")));
+// Anything that doesn't match the above, send back index.html
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname + "/client/build/index.html"));
+});
 
 app.use(
   bodyParser.urlencoded({
